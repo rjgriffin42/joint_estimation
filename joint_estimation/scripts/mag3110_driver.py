@@ -8,16 +8,16 @@ from Adafruit_I2C import Adafruit_I2C
 # Mag 3310 Driver Class
 class Mag_Driver():
 
-  def __init(self):
+  def __init__(self):
     # Get the ~private namespace parameters from command line or launch file
+    print "get parameters"
     rate = float(rospy.get_param('~rate', '10.0'))
-    address = rospy.get_param('~address', 0x60)
+    #address = rospy.get_param('~address', '0x60')
+    
 
     # Create message object
-    i2c = Adafruit_I2C(address)
-    P9_19: I2C2, SCL
-    P9_20: I2C2, SDA
-
+    #i2c = Adafruit_I2C(address)
+    i2c = Adafruit_I2C(0x60)
 
     # Create a publisher for magnet messages
     pub = rospy.Publisher("magnet_topic", AxesValues)
@@ -26,8 +26,11 @@ class Mag_Driver():
     msg.y_axis = 0
     msg.z_axis = 0
 
+    print "Initialize"
+
     # Main while loop
     while not rospy.is_shutdown():
+      print "Main loop"
       # read and populate message from board
       byte = i2c.readU8()
       msg.x = (byte[0]<<8) + byte[1]
@@ -46,7 +49,9 @@ class Mag_Driver():
 # Main function
 if __name__ == '__main__':
   rospy.init_node('mag3110_driver')
+  print "calling main"
   # Go to class functions that do all the heavy lifting. Do error checking.
   try:
+      print "to driver"
       md = Mag_Driver()  
   except rospy.ROSInterruptException: pass
