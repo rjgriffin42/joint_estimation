@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="joint_estimation" name="mag3110_driver" type="mag3110_driver" >
+    <remap from="magnet_topic" to="mag3110_values" />
+    <param name="rate" value="100" />
+    <param name="address" value=0x00 />
+  </node>
+</launch>

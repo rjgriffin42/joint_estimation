@@ -1,0 +1,6 @@
+<launch>
+  <node name=... pkg=... type... >
+    <param name="rate" value="100" />
+    <remap from="magnet_topic" to="mag3110_values" />
+  </node>
+</launch>

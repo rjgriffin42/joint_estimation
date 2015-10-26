@@ -1,26 +1,17 @@
+#include <joint_estimation/AxesValues.h>
+#include <joint_estimation/joint_estimation.h>
 #include "ros/ros.h"
-#include "std_msgs/Float32.msg"
 
 // magnetic axes subscriber
-static ros::Subscriber magnet_x;
-static ros::Subscriber magnet_y;
-static ros::Subscriber magnet_z;
-
-float x_value;
-float y_value;
-float z_value;
+static ros::Subscriber axes_values;
 
 // joint state publisher
 //static ros::Publisher joint_angle;
 
-void MagnetXCallback(const std_msgss::Float32& msg) {
-  x_value = msg;
-}
-void MagnetYCallback(const std_msgss::Float32& msg) {
-  y_value = msg;
-}
-void MagnetZCallback(const std_msgss::Float32& msg) {
-  z_value = msg;
+void MagnetCallback(const joint_estimation::AxesValues& msg) {
+  float x_value = msg.x_axis;
+  float y_value = msg.y_axis;
+  float z_value = msg.z_axis;
 }
 
 int main(int argc, char **argv)
@@ -30,13 +21,14 @@ int main(int argc, char **argv)
   ros::NodeHandle node_handle;
   
   // Declare customizable variables
-  int rate;
-  node_handle.param("rate", rate);
+  double rate = 10;
+  if(node_handle.getParam("~rate", rate))
+  {
+    ROS_WARN("Rate parameter defined incorrectly!");
+  }
 
   // magnetic axes subscriber
-  magnet_x = node_handle.subscribe(MAGNET_X_TOPIC, 3, MagnetXCallback);
-  magnet_y = node_handle.subscribe(MAGNET_Y_TOPIC, 3, MagnetYCallback);
-  magnet_z = node_handle.subscribe(MAGNET_Z_TOPIC, 3, MagnetZCallback);
+  axes_values = node_handle.subscribe("magnet_topic", 3, MagnetCallback);
 
   // Tell ROS how fast to run this node
   ros::Rate r(rate);

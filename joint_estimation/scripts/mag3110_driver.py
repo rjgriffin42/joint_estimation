@@ -11,7 +11,6 @@ class Mag_Driver():
   def __init(self):
     # Get the ~private namespace parameters from command line or launch file
     rate = float(rospy.get_param('~rate', '10.0'))
-    topic = rospy.get_param('~topic', 'magnet_values')
     address = rospy.get_param('~address', 0x60)
 
     # Create message object
@@ -21,7 +20,7 @@ class Mag_Driver():
 
 
     # Create a publisher for magnet messages
-    pub = rospy.Publisher(topic, AxesValues)
+    pub = rospy.Publisher("magnet_topic", AxesValues)
     msg = AxesValues()
     msg.x_axis = 0
     msg.y_axis = 0
