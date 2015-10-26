@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="mag3110_driver" pkg="joint_estimation" type="mag3110_driver.py" >
+    <remap from="magnet_topic" to="mag3110_values" />
+    <param name="rate" value="100" />
+    <param name="address" value="0x00" />
+  </node>
+</launch>
