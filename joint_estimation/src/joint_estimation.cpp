@@ -36,26 +36,35 @@ void MagnetCallback(const joint_estimation::AxesValues& msg) {
     sensor_velocity[i][2] = 0.0f;
   }
 
-  // update sensor velocity
-  for(int i = 0; i < NO_SENSORS; i++)
-  {
-    sensor_x_velocity_estimator[i].update(sensor_position[i][0]);
-    sensor_y_velocity_estimator[i].update(sensor_position[i][1]);
-    sensor_z_velocity_estimator[i].update(sensor_position[i][2]);
-    sensor_velocity[i][0] = sensor_x_velocity_estimator[i].get_filtered_velocity();
-    sensor_velocity[i][1] = sensor_y_velocity_estimator[i].get_filtered_velocity();
-    sensor_velocity[i][2] = sensor_z_velocity_estimator[i].get_filtered_velocity();
-  }
-
   // find joint position and velocity
   float joint_position;
   float joint_velocity;
-  // option for computing joint velocity using velocity of sensor
-  //mechanics_compute_inverse_kinematics(sensor_position, sensor_velocity,
-  //  joint_position, joint_velocity);
-  // option for computing joint velocity using displacement of sensor
-  mechanics_compute_inverse_kinematics(sensor_position, joint_position);
-  joint_velocity = joint_velocity_estimator.update(joint_position);
+  // update sensor velocity
+  if (CONFIG_JOINT_LEVEL_VELOCITY_ESTIMATION == 0)
+  {
+    for(int i = 0; i < NO_SENSORS; i++)
+    {
+      // update sensor velocity estimates
+      sensor_x_velocity_estimator[i].update(sensor_position[i][0]);
+      sensor_y_velocity_estimator[i].update(sensor_position[i][1]);
+      sensor_z_velocity_estimator[i].update(sensor_position[i][2]);
+      sensor_velocity[i][0] = sensor_x_velocity_estimator[i].get_filtered_velocity();
+      sensor_velocity[i][1] = sensor_y_velocity_estimator[i].get_filtered_velocity();
+      sensor_velocity[i][2] = sensor_z_velocity_estimator[i].get_filtered_velocity();
+
+      // solve inverse kinematics for joint velocity and position
+      mechanics_compute_inverse_kinematics(sensor_position, sensor_velocity,
+        joint_position, joint_velocity);
+    }
+  }
+  else
+  {
+    // solve inverse kinematics for joint position
+    mechanics_compute_inverse_kinematics(sensor_position, joint_position);
+
+    // compute joint velocity from joint position change
+    joint_velocity = joint_velocity_estimator.update(joint_position);
+  }
 
   // assemble and publish
   joint_state_msg.name[0] = "Elbow";
