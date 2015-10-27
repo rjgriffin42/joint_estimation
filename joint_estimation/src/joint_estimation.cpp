@@ -1,28 +1,9 @@
 #include <joint_estimation/AxesValues.h>
 #include <joint_estimation/joint_estimation.h>
-#include <joint_estimation/mechanics.h>
 #include <joint_estimation/vector3d.h>
-#include <joint_estimation/VelocityEstimator.h>
 
-// velocity estimators
-std::vector<VelocityEstimator> sensor_x_velocity_estimator(NO_SENSORS,
-  VelocityEstimator(10, CONFIG_SENSOR_POSITION_RESOLUTION,
-  CONFIG_SENSOR_VELOCITY_BREAK_FREQUENCY)
-);
-std::vector<VelocityEstimator> sensor_y_velocity_estimator(NO_SENSORS,
-  VelocityEstimator(10, CONFIG_SENSOR_POSITION_RESOLUTION,
-  CONFIG_SENSOR_VELOCITY_BREAK_FREQUENCY)
-);
-std::vector<VelocityEstimator> sensor_z_velocity_estimator(NO_SENSORS,
-  VelocityEstimator(10, CONFIG_SENSOR_POSITION_RESOLUTION,
-  CONFIG_SENSOR_VELOCITY_BREAK_FREQUENCY)
-);
-VelocityEstimator joint_velocity_estimator(10, CONFIG_SENSOR_POSITION_RESOLUTION, 
-  CONFIG_JOINT_VELOCITY_BREAK_FREQUENCY);
 
 void MagnetCallback(const joint_estimation::AxesValues& msg) {
-  // pull values from sensor message
-
   // update sensor position TODO convert from magnetometer value to position
   vector3d sensor_position[NO_SENSORS];
   vector3d sensor_velocity[NO_SENSORS];
