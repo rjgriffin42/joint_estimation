@@ -22,7 +22,7 @@ int main(int argc, char **argv)
   
   // Declare customizable variables
   double rate = 10;
-  if(node_handle.getParam("~rate", rate))
+  if(node_handle.get("rate", rate))
   {
     ROS_WARN("Rate parameter defined incorrectly!");
   }

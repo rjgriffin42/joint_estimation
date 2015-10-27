@@ -1,5 +1,5 @@
 <launch>
-  <node name=... pkg=... type... >
+  <node name=joint_estimation pkg=joint_estimation type=joint_read_estimation >
     <param name="rate" value="100" />
     <remap from="magnet_topic" to="mag3110_values" />
   </node>
