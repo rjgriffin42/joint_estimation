@@ -10,7 +10,7 @@ class Mag_Driver():
     # Get the ~private namespace parameters from command line or launch file
     rate = float(rospy.get_param('~rate', '10.0'))
     address = rospy.get_param('~address', '0x60')
-    
+    no_sensors = rospy.get_param('~no_sensors', '1')
 
     # Create message object
     address = 0x60
@@ -19,27 +19,29 @@ class Mag_Driver():
 
     # Create a publisher for magnet messages
     pub = rospy.Publisher("magnet_topic", AxesValues)
-    msg = AxesValues()
-    msg.x_axis = 0
-    msg.y_axis = 0
-    msg.z_axis = 0
-
-    print "Initialize"
+    
+    # Initialize messages
+    for i in range(0, no_sensors)
+      msg = AxesValues()
+      msg.id[i] = i
+      msg.x_axis[i] = 0
+      msg.y_axis[i] = 0
+      msg.z_axis[i] = 0
 
     # Main while loop
     while not rospy.is_shutdown():
-      print "Main loop"
       i2c.write8(DEVICE_REG, 0x01) #FIXME is this needed?
 
-      # read in six bytes of message
+      # read in six bytes of message FIXME have this iterate of the different nodes
       data = []
       # Make list of 6 bytes
       for i in range (0, 6):
         data.append(i2c.readU8(DEVICE_REG))
 
-      msg.x_axis = (data[0] << 8) + data[1]
-      msg.y_axis = (data[2] << 8) + data[3]
-      msg.z_axis = (data[4] << 8) + data[5]
+      msg.id[0] = 0
+      msg.x_axis[0] = (data[0] << 8) + data[1]
+      msg.y_axis[0] = (data[2] << 8) + data[3]
+      msg.z_axis[0] = (data[4] << 8) + data[5]
       
       # publish data out
       pub.publish(msg)

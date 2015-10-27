@@ -22,18 +22,15 @@ VelocityEstimator joint_velocity_estimator(10, CONFIG_SENSOR_POSITION_RESOLUTION
 
 void MagnetCallback(const joint_estimation::AxesValues& msg) {
   // pull values from sensor message
-  float x_value = msg.x_axis;
-  float y_value = msg.y_axis;
-  float z_value = msg.z_axis;
 
   // update sensor position TODO convert from magnetometer value to position
   vector3d sensor_position[NO_SENSORS];
   vector3d sensor_velocity[NO_SENSORS];
   for(int i = 0; i < NO_SENSORS; i++)
   {
-    sensor_position[i][0] = x_value;
-    sensor_position[i][1] = y_value;
-    sensor_position[i][2] = z_value;
+    sensor_position[i][0] = msg.x_axis[i];
+    sensor_position[i][1] = msg.y_axis[i];
+    sensor_position[i][2] = msg.z_axis[i];
     sensor_velocity[i][0] = 0.0f;
     sensor_velocity[i][1] = 0.0f;
     sensor_velocity[i][2] = 0.0f;
