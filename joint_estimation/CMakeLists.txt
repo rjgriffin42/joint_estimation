@@ -48,8 +48,6 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   AxesValues.msg
-#   Message1.msg
-#   Message2.msg
 )
 
 ## Generate services in the 'srv' folder
