@@ -2,19 +2,17 @@
 #include <joint_estimation/joint_estimation.h>
 #include <joint_estimation/vector3d.h>
 
+float get_sensor_position(const float value)
+{
+  return CONFIG_CONVERSION_VALUE * value;
+}
 
 void MagnetCallback(const joint_estimation::AxesValues& msg) {
-  // update sensor position TODO convert from magnetometer value to position
-  vector3d sensor_position[NO_SENSORS];
-  vector3d sensor_velocity[NO_SENSORS];
   for(int i = 0; i < NO_SENSORS; i++)
   {
-    sensor_position[i][0] = msg.x_axis[i];
-    sensor_position[i][1] = msg.y_axis[i];
-    sensor_position[i][2] = msg.z_axis[i];
-    sensor_velocity[i][0] = 0.0f;
-    sensor_velocity[i][1] = 0.0f;
-    sensor_velocity[i][2] = 0.0f;
+    sensor_position[i][0] = get_sensor_position(msg.x_axis[i]);
+    sensor_position[i][1] = get_sensor_position(msg.y_axis[i]);
+    sensor_position[i][2] = get_sensor_position(msg.z_axis[i]);
   }
 
   // find joint position and velocity
@@ -40,14 +38,31 @@ void MagnetCallback(const joint_estimation::AxesValues& msg) {
   }
   else
   {
+    for(int i = 0; i < NO_SENSORS; i++)
+    {
+      sensor_velocity[i][0] = 0.0f;
+      sensor_velocity[i][1] = 0.0f;
+      sensor_velocity[i][2] = 0.0f;
+    }
+
     // solve inverse kinematics for joint position
     mechanics_compute_inverse_kinematics(sensor_position, joint_position);
 
     // compute joint velocity from joint position change
     joint_velocity = joint_velocity_estimator.update(joint_position);
   }
+  
+  // assemble sensor position state and publish
+  for(int i = 0; i < NO_SENSORS; i++)
+  {
+    sensor_state_msg.name[i] = i; 
+    sensor_state_msg.position[i] = vector3d_norm(sensor_position[i]);
+    sensor_state_msg.velocity[i] = vector3d_norm(sensor_velocity[i]);
+    sensor_state_msg.effort[i] = 0.0f;
+  }
+  sensor_state_pub.publish(sensor_state_msg);
 
-  // assemble and publish
+  // assemble joint state and publish
   joint_state_msg.name[0] = "Elbow";
   joint_state_msg.position[0] = joint_position;
   joint_state_msg.velocity[0] = joint_velocity;
@@ -83,7 +98,10 @@ int main(int argc, char **argv)
   joint_state_msg.effort.resize(1);
 
   // magnetic axes subscriber
-  axes_values_sub = node_handle.subscribe("magnet_topic", 3, MagnetCallback);
+  axes_values_sub = node_handle.subscribe("magnet_topic", 1, MagnetCallback);
+
+  joint_state_pub = node_handle.advertise<sensor_msgs::JointState>("/elbow_joint_state", 1);
+  sensor_state_pub = node_handle.advertise<sensor_msgs::JointState>("/sensor_position_state", 1);
 
   // Tell ROS how fast to run this node
   ros::Rate r(rate);
