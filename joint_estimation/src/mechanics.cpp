@@ -15,3 +15,7 @@ static const vector3d joint_axis[NO_SENSORS] = {
 void mechanics_compute_inverse_kinematics(vector3d sensor_position[NO_SENSORS], vector3d sensor_velocity[NO_SENSORS], float joint_position, float joint_velocity)
 {
 }
+
+void mechanics_compute_inverse_kinematics(vector3d sensor_position[NO_SENSORS], float joint_position)
+{
+}
