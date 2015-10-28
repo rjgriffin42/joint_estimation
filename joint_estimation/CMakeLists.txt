@@ -101,9 +101,17 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES joint_estimation
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
-#  DEPENDS system_lib
+  LIBRARIES
+    mechanics
+    vector3d
+  CATKIN_DEPENDS
+    roscpp
+    rospy
+    std_msgs
+    message_runtime
+  DEPENDS
+    mechanics
+    vector3d
 )
 
 ###########
@@ -119,9 +127,13 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(joint_estimation
-#   src/${PROJECT_NAME}/joint_estimation.cpp
-# )
+add_library(mechanics
+  src/mechanics.cpp
+)
+
+add_library(vector3d
+  src/vector3d.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -142,6 +154,7 @@ add_dependencies(joint_estimation
 ## Specify libraries to link a library or executable target against
 target_link_libraries(joint_estimation
   ${catkin_LIBRARIES}
+  mechanics vector3d
 )
 
 #############
@@ -159,11 +172,11 @@ install(PROGRAMS
 )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS joint_estimation joint_estimation_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS joint_estimation mechanics vector3d
+#  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark cpp header files for installation
 install(DIRECTORY include/${PROJECT_NAME}/ scripts
