@@ -1,5 +1,6 @@
+<?xml version="1.0"?>
 <launch>
-  <node name=joint_estimation pkg=joint_estimation type=joint_read_estimation >
+  <node name="joint_estimation" pkg="joint_estimation" type="joint_estimation" >
     <param name="rate" value="100" />
     <remap from="magnet_topic" to="mag3110_values" />
   </node>
