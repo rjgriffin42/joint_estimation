@@ -104,6 +104,7 @@ catkin_package(
   LIBRARIES
     mechanics
     vector3d
+    Filter
   CATKIN_DEPENDS
     roscpp
     rospy
@@ -112,6 +113,7 @@ catkin_package(
   DEPENDS
     mechanics
     vector3d
+    Filter
 )
 
 ###########
@@ -135,6 +137,10 @@ add_library(vector3d
   src/vector3d.cpp
 )
 
+add_library(Filter
+  src/Filter.cpp
+)
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -154,7 +160,7 @@ add_dependencies(joint_estimation
 ## Specify libraries to link a library or executable target against
 target_link_libraries(joint_estimation
   ${catkin_LIBRARIES}
-  mechanics vector3d
+  mechanics vector3d Filter
 )
 
 #############
@@ -172,7 +178,7 @@ install(PROGRAMS
 )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS joint_estimation mechanics vector3d
+install(TARGETS joint_estimation mechanics vector3d Filter
 #  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
