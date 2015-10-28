@@ -102,20 +102,14 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES
-    mechanics
-    vector3d
-    Filter
-    VelocityEstimator
+    joint_estimation_utils
   CATKIN_DEPENDS
     roscpp
     rospy
     std_msgs
     message_runtime
   DEPENDS
-    mechanics
-    vector3d
-    Filter
-    VelocityEstimator
+    joint_estimation_utils
 )
 
 ###########
@@ -131,20 +125,14 @@ include_directories(
 )
 
 ## Declare a C++ library
-add_library(mechanics
+add_library(joint_estimation_utils
   src/mechanics.cpp
-)
-
-add_library(vector3d
   src/vector3d.cpp
-)
-
-add_library(Filter
   src/Filter.cpp
-)
-
-add_library(VelocityEstimator
   src/VelocityEstimator.cpp
+)
+target_link_libraries(joint_estimation_utils
+  ${catkin_LIBRARIES}
 )
 
 ## Add cmake target dependencies of the library
@@ -166,7 +154,7 @@ add_dependencies(joint_estimation
 ## Specify libraries to link a library or executable target against
 target_link_libraries(joint_estimation
   ${catkin_LIBRARIES}
-  mechanics vector3d Filter VelocityEstimator
+  joint_estimation_utils
 )
 
 #############
@@ -184,7 +172,7 @@ install(PROGRAMS
 )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS joint_estimation mechanics vector3d Filter VelocityEstimator
+install(TARGETS joint_estimation joint_estimation_utils
 #  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

@@ -8,6 +8,8 @@ class VelocityEstimator
 public:
   explicit VelocityEstimator(const float& sample_rate = 100.0f, const float& position_resolution = 0.01f, const float& velocity_break_frequency = 0.0f);
   ~VelocityEstimator(); 
+  void set_sample_rate(const double& sample_rate);
+  void set_sample_rate(const float& sample_rate);
   float get_raw_velocity() const; 
   float get_filtered_velocity() const;
   float update(float position);

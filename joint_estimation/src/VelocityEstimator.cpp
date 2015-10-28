@@ -1,4 +1,5 @@
 #include <joint_estimation/VelocityEstimator.h>
+#include <joint_estimation/Filter.h>
 #include <math.h>
 
 /**
@@ -21,6 +22,17 @@ VelocityEstimator::VelocityEstimator(const float& sample_rate, const float& posi
 
 VelocityEstimator::~VelocityEstimator()
 {
+}
+
+void VelocityEstimator::set_sample_rate(const double& sample_rate)
+{
+  set_sample_rate((float) sample_rate);
+}
+
+void VelocityEstimator::set_sample_rate(const float& sample_rate)
+{
+  _sample_period = 1 / sample_rate;
+  velocity_estimator_reset();
 }
 
 void VelocityEstimator::velocity_estimator_reset()
