@@ -135,7 +135,9 @@ add_executable(joint_estimation
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(joint_estimation_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(joint_estimation
+  joint_estimation_generate_messages_cpp
+)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(joint_estimation
