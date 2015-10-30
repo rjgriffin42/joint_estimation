@@ -6,15 +6,15 @@ This repository contains all the necessary code to run the mechatronics project 
 
 ## Make Catkin Workspace 
 
-First, create a catkin workspace (```wiki.ros.org/catkin/Tutorials/create_a_workspace```)
+First, create a catkin workspace (`wiki.ros.org/catkin/Tutorials/create_a_workspace`)
 
-```mkdir -p ~/catkin_ws/src \n```
-```cd ~/catkin_ws/src \n```
-```catkin_init_workspace```
+`mkdir -p ~/catkin_ws/src`
+`cd ~/catkin_ws/src`
+
 
 Then, in the directory `catkin_ws/src/`, execute
 
-```git clone https://github.com/rjgriffin42/mechatronics```
+``git clone https://github.com/rjgriffin42/mechatronics``
 
 This adds the directory "mechatronics", which is where the project is contained.
 
