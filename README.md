@@ -4,6 +4,8 @@ This repository contains all the necessary code to run the mechatronics project 
 
 # Setting up Project
 
+If you are setting up a beaglebone, follow the instructions in the `Use install script section`. If you already have an existing catkin workspace and are not setting one up for the first time, follow the instructions in the `Make Catkin Workspace`, as this allows you to set up wherever you would like.
+
 ## Make Catkin Workspace 
 
 First, create a catkin workspace (`wiki.ros.org/catkin/Tutorials/create_a_workspace`)
@@ -21,9 +23,14 @@ Then, in the directory `catkin_ws/src/`, execute
 
 This adds the mechatronics repo, which is where our project is  contained.
 
-## Clone Repo
+## Use install script
 
-An alternative is to clone this repository, cd into scripts, and run `./install_project.sh` TODO
+An alternative is to clone this repository, using
+`git clone https://github.com/rjgriffin42/mechatronics`
+
+Then cd into `${DIRECTORY}/mechatronics/scripts`, and run `./install_project.sh`. Note that this script must be run in its own directory due to relative paths.
+
+This will create a catkin workspace in the root directory, move the freshly cloned repository into it, and build the code.
 
 # Building Project
 
