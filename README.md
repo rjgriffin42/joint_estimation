@@ -8,7 +8,7 @@ This repository contains all the necessary code to run the mechatronics project 
 
 First, create a catkin workspace (`wiki.ros.org/catkin/Tutorials/create_a_workspace`)
 
-`mkdir -p ~/catkin_ws/src`
+`mkdir -p ~/catkin_ws/src\\`
 `cd ~/catkin_ws/src`
 
 
