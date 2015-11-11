@@ -10,7 +10,7 @@ class Mag_Driver():
     # Get the ~private namespace parameters from command line or launch file
     rate = float(rospy.get_param('~rate', '10.0'))
     address = rospy.get_param('~address', '0x60')
-    no_sensors = rospy.get_param('~no_sensors', '1')
+    no_sensors = rospy.get_param('~no_sensors', 1)
 
     # Create message object
     address = 0x60
@@ -18,15 +18,15 @@ class Mag_Driver():
     i2c = Adafruit_I2C(address)
 
     # Create a publisher for magnet messages
-    pub = rospy.Publisher("magnet_topic", AxesValues)
+    pub = rospy.Publisher("magnet_topic", AxesValues, queue_size = 0)
     
     # Initialize messages
-    for i in range(0, no_sensors)
-      msg = AxesValues()
-      msg.id[i] = i
-      msg.x_axis[i] = 0
-      msg.y_axis[i] = 0
-      msg.z_axis[i] = 0
+    msg = AxesValues()
+    for i in range(0, no_sensors):
+      msg.id.append(i)
+      msg.x_axis.append(0)
+      msg.y_axis.append(0)
+      msg.z_axis.append(0)
 
     # Main while loop
     while not rospy.is_shutdown():
