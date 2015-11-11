@@ -13,60 +13,60 @@ class Mag_Driver():
     address = rospy.get_param('~address', '0x0e')
     no_sensors = rospy.get_param('~no_sensors', 1)
 
-    # Create message object
-    address = 0x0e
-    DEVICE_REG = 1
-    i2c = Adafruit_I2C(address)
-
     # Create a publisher for magnet messages
     pub = rospy.Publisher("magnet_topic", AxesValues, queue_size = 0)
     
-    # Initialize messages
+    # Initialize and I2C nodes
+    i2c = []
     msg = AxesValues()
     for i in range(0, no_sensors):
+      i2c.append(Adafruit_I2C(address[i]))
       msg.id.append(i)
       msg.x_axis.append(0)
       msg.y_axis.append(0)
       msg.z_axis.append(0)
 
+      #initialize bus
+      i2c[i].write8(17,128)
+      i2c[i].write8(16,1)
+      time.sleep(0.0002) 
+
     # Main while loop
     while not rospy.is_shutdown():
-      #initialize bus
-      i2c.write8(17,128)
-      i2c.write8(16,1)
       data = [0, 0, 0, 0, 0, 0]
 
-      time.sleep(0.0002) 
-  
-      #read x
-      i2c.write8(1,0)
-      time.sleep(0.0002)
-      data[0] = i2c.readU8(1)
-      time.sleep(0.0002)
-      i2c.write8(2,0)
-      time.sleep(0.0002)
-      data[1] = i2c.readU8(2)
-      msg.x_axis[0] = data[1] + (data[0] << 8)
+      for node in range(0, no_sensors):  
+        # read x
+        i2c[node].write8(1,0)
+        time.sleep(0.0002)
+        data[0] = i2c[node].readU8(1)
+        time.sleep(0.0002)
+        i2c[node].write8(2,0)
+        time.sleep(0.0002)
+        data[1] = i2c[node].readU8(2)
+        msg.x_axis[node] = data[1] + (data[0] << 8)
 
-      i2c.write8(3,0)
-      time.sleep(0.0002)
-      data[2] = i2c.readU8(3)
-      time.sleep(0.0002)
-      i2c.write8(4,0)
-      time.sleep(0.0002)
-      data[3] = i2c.readU8(4)
-      msg.y_axis[0] = data[3] + (data[2] << 8)
+        # read y
+        i2c[node].write8(3,0)
+        time.sleep(0.0002)
+        data[2] = i2c[node].readU8(3)
+        time.sleep(0.0002)
+        i2c[node].write8(4,0)
+        time.sleep(0.0002)
+        data[3] = i2c[node].readU8(4)
+        msg.y_axis[node] = data[3] + (data[2] << 8)
 
-      i2c.write8(5,0)
-      time.sleep(0.0002)
-      data[4] = i2c.readU8(5)
-      time.sleep(0.0002)
-      i2c.write8(6,0)
-      time.sleep(0.0002)
-      data[5] = i2c.readU8(6)
-      msg.z_axis[0] = data[5] + (data[4] << 8)
+        # read z
+        i2c[node].write8(5,0)
+        time.sleep(0.0002)
+        data[4] = i2c[node].readU8(5)
+        time.sleep(0.0002)
+        i2c[node].write8(6,0)
+        time.sleep(0.0002)
+        data[5] = i2c[node].readU8(6)
+        msg.z_axis[node] = data[5] + (data[4] << 8)
 
-      msg.id[0] = 0
+        msg.id[node] = node
       
       # publish data out
       pub.publish(msg)
@@ -76,6 +76,7 @@ class Mag_Driver():
         rospy.sleep(1/rate)
       else:
         rospy.sleep(1.0)
+  
 
 # Main function
 if __name__ == '__main__':

@@ -1,8 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-  <node name="mag3110_driver" pkg="joint_estimation" type="mag3110_driver.py" output="screen" launch-prefix="sudo">
+  <arg name="rate" default="10" />
+  <arg name="no_sensors" default="1" />
+
+  <node name="mag3110_driver" pkg="joint_estimation" type="mag3110_driver.py" output="screen">
     <remap from="magnet_topic" to="mag3110_values" />
-    <param name="rate" value="100" />
-    <param name="address" value="0x00" />
+    <param name="rate" value="$(arg rate)" />
+    <param name="no_sensors" value="$(arg no_sensors)" type="int" />
+    <rosparam param="address">
+      [14]
+    </rosparam>
   </node>
 </launch>
